@@ -14,7 +14,7 @@ it has been well tested by chenglong.gu@perfma.com, have fun !
 
 ## Build 
 
-mvn clean package
+`mvn clean package`
 
 
 ## usage
