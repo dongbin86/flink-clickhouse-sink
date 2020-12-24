@@ -83,3 +83,9 @@ so you need convert your datastream event to that fomat, see the example above.
 
 * hongshen(dong_bin86@163.com)
 * chenglong(chenglong.gu@perfma.com)
+
+
+## sponsorship
+
+Thank you for your sponsorship and support
+
