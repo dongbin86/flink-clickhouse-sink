@@ -1,10 +1,15 @@
 ## Flink clickhouse sink
 
-simple and efficient, at least once guarantee, well tested by chenglong.gu@perfma.com
-
+simple and efficient, at least once guarantee
 flink 1.8 is currently supported, and future versions are available for reference
-
 instead of using JDBC, use clickHouse's HTTP interface directly
+
+##### why I create this tool
+
+At the beginning, I used this tool (https://github.com/ivi-ru/flink-clickhouse-sink), which linked to the official website,
+but I found that it would cause data loss, and the flink slot could not be released normally when the clickHouse server showed abnormal response,
+and the latest version also showed oom, so I rewrote this tool for people who want a simple clickhouse sink
+it has been well tested by chenglong.gu@perfma.com
 
 ## Build 
 
