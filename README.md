@@ -87,5 +87,10 @@ so you need convert your datastream event to that fomat, see the example above.
 
 ## Sponsorship
 
+![](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/hongshen.jpg)
+
+![](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/chenglong.png)
+
+
 Thank you for your sponsorship and support
 
