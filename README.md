@@ -87,7 +87,7 @@ so you need convert your datastream event to that fomat, see the example above.
 
 ## Sponsorship
 
-![](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/hongshen.png)
+![](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/honshen.png)
 
 ![](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/chenglong.png)
 
