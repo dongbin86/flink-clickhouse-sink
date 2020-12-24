@@ -24,8 +24,6 @@ import java.text.SimpleDateFormat
 import java.util.{Date, Properties}
 
 import com.alibaba.fastjson.JSON
-import com.perfma.flink.clickhouse.ClickhouseSink
-import com.perfma.flink.clickhouse.model.Consts
 import org.apache.flink.api.common.serialization.SimpleStringSchema
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.scala._
