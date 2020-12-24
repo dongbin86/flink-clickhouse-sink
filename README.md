@@ -8,7 +8,7 @@
 
 At the beginning, I used this tool (https://github.com/ivi-ru/flink-clickhouse-sink), which linked to the official website,
 but I found that it would cause data loss, and the flink slot could not be released normally when the clickHouse server showed abnormal response,
-and the latest version also showed oom, so I rewrote this tool for people who want a simple clickhouse sink.
+and the latest version also showed 'Out of memory', so I rewrote this tool for people who want a simple clickhouse sink.
 
 it has been well tested by chenglong.gu@perfma.com, have fun !
 
