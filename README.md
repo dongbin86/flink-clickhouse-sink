@@ -12,6 +12,15 @@ and the latest version also showed 'Out of memory', so I rewrote this tool for p
 
 it has been well tested by chenglong.gu@perfma.com, have fun !
 
+## Sponsorship
+
+![hongshen](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/hongshen.png)
+![chenglong](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/chenglong.png)
+
+
+Thank you for your sponsorship and support
+
+
 ## Build 
 
 `mvn clean package`
@@ -85,11 +94,4 @@ so you need convert your datastream event to that fomat, see the example above.
 * chenglong(chenglong.gu@perfma.com)
 
 
-## Sponsorship
-
-![hongshen](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/hongshen.png)
-![chenglong](https://github.com/dongbin86/flink-clickhouse-sink/blob/main/picture/chenglong.png)
-
-
-Thank you for your sponsorship and support
 
