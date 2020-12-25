@@ -17,7 +17,7 @@ it has been well tested by chenglong.gu@perfma.com, have fun !
 `mvn clean package`
 
 
-## usage
+## Usage
 
 ```
 import java.text.SimpleDateFormat
