@@ -6,13 +6,13 @@ import java.util.concurrent.ThreadFactory;
  * @author hongshen
  * @date 2020/12/24
  */
-public class FlushThreadFactory implements ThreadFactory {
+public class ChThreadFactory implements ThreadFactory {
 
     final ThreadGroup group;
     final String namePrefix;
     final int index;
 
-    public FlushThreadFactory(String namePrefix, int index) {
+    public ChThreadFactory(String namePrefix, int index) {
         this.namePrefix = namePrefix;
         this.index = index;
         SecurityManager s = System.getSecurityManager();

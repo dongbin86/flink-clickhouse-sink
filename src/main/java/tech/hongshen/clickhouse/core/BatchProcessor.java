@@ -1,14 +1,11 @@
 package tech.hongshen.clickhouse.core;
 
 import io.netty.handler.codec.http.HttpHeaderNames;
-import org.asynchttpclient.AsyncHttpClient;
-import org.asynchttpclient.BoundRequestBuilder;
-import org.asynchttpclient.Request;
-import org.asynchttpclient.Response;
+import org.asynchttpclient.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import tech.hongshen.clickhouse.common.ClickHouseConfig;
-import tech.hongshen.clickhouse.common.FlushThreadFactory;
+import tech.hongshen.clickhouse.common.ChThreadFactory;
 
 import java.io.Closeable;
 import java.util.concurrent.*;
@@ -31,6 +28,7 @@ public class BatchProcessor implements Closeable {
     private final ClickHouseConfig config;
     private TableRowsBuffer tableRowsBuffer;
     private final ScheduledThreadPoolExecutor scheduler;
+    private final ExecutorService callbackService;
     private final ScheduledFuture scheduledFuture;
     private final AtomicLong executionIdGen = new AtomicLong();
 
@@ -43,9 +41,21 @@ public class BatchProcessor implements Closeable {
         this.flushIntervalSec = config.getFlushInterval();
         this.listener = listener;
         this.tableRowsBuffer = new TableRowsBuffer(targetTable);
+        int cores = Runtime.getRuntime().availableProcessors();
+        int coreThreadsNum = Math.max(cores / 4, 2);
+
+        this.callbackService = new ThreadPoolExecutor(
+                coreThreadsNum,
+                Integer.MAX_VALUE,
+                60L,
+                TimeUnit.SECONDS,
+                new LinkedBlockingQueue<>(),
+                new ChThreadFactory("writer-callback", taskIndex)
+        );
+
         this.scheduler = (ScheduledThreadPoolExecutor) Executors.newScheduledThreadPool(
                 1,
-                new FlushThreadFactory((targetTable != null ? "[" + targetTable + "]" : "") + "timer-flusher", taskIndex)
+                new ChThreadFactory((targetTable != null ? "[" + targetTable + "]" : "") + "timer-flusher", taskIndex)
         );
         this.scheduler.setExecuteExistingDelayedTasksAfterShutdownPolicy(false);
         this.scheduler.setContinueExistingPeriodicTasksAfterShutdownPolicy(false);
@@ -96,9 +106,10 @@ public class BatchProcessor implements Closeable {
 
         boolean afterCalled = false;
         try {
-            Response response = client.executeRequest(request).get();
+            ListenableFuture<Response> response = client.executeRequest(request);
             afterCalled = true;
-            listener.handleResponse(executionId, tableRowsBuffer, response);
+            Runnable callback = responseCallback(response, executionId, tableRowsBuffer);
+            response.addListener(callback, callbackService);
         } catch (Exception e) {
             if (!afterCalled) {
                 listener.handleExceptionWhenGettingResponse(executionId, tableRowsBuffer, e);
@@ -106,6 +117,17 @@ public class BatchProcessor implements Closeable {
         }
     }
 
+    private Runnable responseCallback(ListenableFuture<Response> whenResponse, long executionId, TableRowsBuffer tableRowsBuffer) {
+        return () -> {
+            try {
+                Response response = whenResponse.get();
+                listener.handleResponse(executionId, tableRowsBuffer, response);
+            } catch (Exception e) {
+                logger.error("Error while executing callback", e);
+                listener.handleExceptionWhenGettingResponse(executionId, tableRowsBuffer, e);
+            }
+        };
+    }
 
     private Request buildRequest(TableRowsBuffer tableRowsBuffer) {
         String csv = String.join(" , ", tableRowsBuffer.getRows());
@@ -137,6 +159,10 @@ public class BatchProcessor implements Closeable {
             }
             if (tableRowsBuffer.bufferSize() > 0) {
                 execute();
+            }
+
+            if (this.callbackService != null) {
+                this.callbackService.shutdown();
             }
         }
     }
